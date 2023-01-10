@@ -20,4 +20,4 @@ The datasets are explained in Section 5.3 of the paper.
 
 **Abstract**
 
-The code to implement our method is summarized in the [code]() folder in this repository.
+The code to implement our method is summarized [here](https://github.com/Jeremy690/-A-Scale-free-Approach-for-False-Discovery-Rate-Control-in-Generalized-Linear-Models/tree/main/code/functions) in this repository.
