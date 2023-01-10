@@ -7,16 +7,16 @@ import scipy
 import os
 import statsmodels.api as sm
 
-### Set working directory to 'figure2' folder, e.g., 
-# os.chdir("~/code/simulation/figure2")
+### Set working directory to 'figure3' folder, e.g., 
+# os.chdir("~/code/simulation/figure3")
 
-n = 500 # number of data points
-p = 60  # number of features
+n = 3000 # number of data points
+p = 500  # number of features
 replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
 random.seed(replicate)
 rho = float(os.getenv("att"))
-delta = 6.5
-p1 = 30
+delta = 11
+p1 = 50
 q = 0.1
 
 

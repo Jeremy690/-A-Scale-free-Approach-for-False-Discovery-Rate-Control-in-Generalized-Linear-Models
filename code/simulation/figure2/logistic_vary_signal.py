@@ -8,7 +8,7 @@ import os
 import statsmodels.api as sm
 
 ### Set working directory to 'figure2' folder, e.g., 
-# os.chdir("~/code/simulation/figure4")
+# os.chdir("~/code/simulation/figure2")
 
 n = 500 # number of data points
 p = 60  # number of features

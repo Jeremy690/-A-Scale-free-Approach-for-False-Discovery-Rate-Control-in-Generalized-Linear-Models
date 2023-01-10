@@ -7,16 +7,16 @@ import scipy
 import os
 import statsmodels.api as sm
 
-### Set working directory to 'figure2' folder, e.g., 
-# os.chdir("~/code/simulation/figure2")
+### Set working directory to 'figure3' folder, e.g., 
+# os.chdir("~/code/simulation/figure3")
 
-n = 500 # number of data points
-p = 60  # number of features
+n = 3000 # number of data points
+p = 500  # number of features
 replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
 random.seed(replicate)
-rho = float(os.getenv("att"))
-delta = 6.5
-p1 = 30
+rho = 0.2
+delta = float(os.getenv("att"))
+p1 = 50
 q = 0.1
 
 
@@ -68,7 +68,7 @@ knockoff_time = end-start
 
 
 data_save = [fdp, power, knockoff_time]
-filename = '/result_left/cor_%.2f_replicate_%d.txt'%(rho,replicate)
+filename = '/result_right/signal_%.2f_replicate_%d.txt'%(delta,replicate)
 with open(filename, 'w') as filehandle:
     for listitem in data_save:
         filehandle.write('%s\n' % listitem)
