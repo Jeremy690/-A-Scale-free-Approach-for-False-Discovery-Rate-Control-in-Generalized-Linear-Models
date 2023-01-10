@@ -1,0 +1,79 @@
+import numpy as np
+import knockpy
+import warnings
+import random
+from knockpy.knockoff_filter import KnockoffFilter
+import scipy
+import os
+import statsmodels.api as sm
+
+### Set working directory to 'figure3' folder, e.g., 
+# os.chdir("~/code/simulation/figure3")
+
+n = 3000 # number of data points
+p = 500  # number of features
+replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
+random.seed(replicate)
+rho = float(os.getenv("att"))
+delta = 6
+p1 = 50
+q = 0.1
+
+
+Sigma = np.eye(p)
+for i in range(0,p):
+    for j in range(0,p):
+        Sigma[i,j] = np.power(rho, abs(i-j))
+
+
+nonzero = random.sample(range(0, p), p1)
+zero = np.setdiff1d(range(0, p), nonzero)
+beta = np.zeros(p)
+for nzr in nonzero:
+    beta[nzr] = random.sample([-1,1],1)[0]*delta
+
+
+# Sample X
+X = np.random.multivariate_normal(mean=np.zeros(p), cov= Sigma, size=(n,))*1/np.sqrt(n)
+mu = np.dot(X, beta)
+def f(x):
+    return np.exp(x)
+y = np.random.negative_binomial(2, 2/(2+f(mu)))
+
+
+start = time.clock()
+kfilter = KnockoffFilter(ksampler='gaussian', knockoff_kwargs={'method':'mvr'})
+_ = kfilter.forward(X=X, y=y, fdr=q)
+Xk = kfilter.Xk
+# Fit MLE with X and Xk
+nb_model = sm.GLM(y, np.hstack((X, Xk)), family=sm.families.NegativeBinomial(alpha = 1/2))
+nb_results = nb_model.fit()
+Z = nb_results.params
+tau = 1/np.sqrt(np.diag(np.linalg.inv(np.matmul(np.hstack((X, Xk)).T, np.hstack((X, Xk))))))
+# Get feature importance
+W = abs(Z[:p]*tau[:p]) - abs(Z[p:]*tau[p:])
+kfilter.W = W
+# Make selections
+rejections = kfilter.make_selections(kfilter.W, fdr = 0.1)
+#Calculate FDP and power
+if rejections.sum()!=0:
+	power = np.dot(rejections, beta != 0) / (beta != 0).sum()
+	fdp = np.dot(rejections, beta == 0) / rejections.sum()
+else:
+	power = 0
+	fdp = 0
+
+end = time.clock()
+knockoff_time = end-start
+
+
+data_save = [fdp, power, knockoff_time]
+filename = '/result_left/cor_%.2f_replicate_%d.txt'%(rho,replicate)
+with open(filename, 'w') as filehandle:
+    for listitem in data_save:
+        filehandle.write('%s\n' % listitem)
+
+
+
+
+
