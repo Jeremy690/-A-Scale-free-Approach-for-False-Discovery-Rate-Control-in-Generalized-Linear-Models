@@ -21,3 +21,11 @@ The datasets are explained in Section 5.3 of the paper.
 **Abstract**
 
 The code to implement our method is summarized [here](https://github.com/Jeremy690/-A-Scale-free-Approach-for-False-Discovery-Rate-Control-in-Generalized-Linear-Models/tree/main/code/functions) in this repository.
+
+**Description
+
+The code folder contains all the scripts we used to reproduce the results in the main text of the paper. It consists of two parts: functions and simulations. The functions folder contains the implementation of our methods and the methods considered for comparisons. It also contains some utility functions that are used to calculate the fdp and power. The simulation folder contains all the codes needed to reproduce the simulations in the main text of the paper. Each sub-folder of the simulation fold contains the R code, python code and the sh file. The sh file is used to run the simulations in a parallel way via the Odyssey system at Harvard. 
+
+# Instructions for Use
+
+Please see the repo [here]{https://github.com/Jeremy690/False-Discovery-Rate-via-Data-Splitting}.
