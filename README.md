@@ -28,4 +28,4 @@ The code folder contains all the scripts we used to reproduce the results in the
 
 # Instructions for Use
 
-Please see the repo [here]{https://github.com/Jeremy690/False-Discovery-Rate-via-Data-Splitting}.
+Please see the repo [here](https://github.com/Jeremy690/False-Discovery-Rate-via-Data-Splitting).
