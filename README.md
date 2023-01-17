@@ -24,7 +24,7 @@ The code to implement our method is summarized [here](https://github.com/Jeremy6
 
 **Description**
 
-The code folder contains two sub folders: functions and simulations. The functions folder contains utils.R, in which there are some common utility functions used to make selections and calculate the fdp and the power. These utility functions will be used in the reproduction of every figure in our paper. The simulations folder contains all the codes needed to reproduce the simulations in the main text of the paper. The implementaions of our method and every method considered for comparisons are seperated into their own python or R files. These files  will be imported via the "vary_cor.R" type of files to make comparisons.
+The code folder contains two sub folders: functions and simulations. The functions folder contains utils.R, in which there are some common utility functions used to make selections and calculate the fdp and the power. These utility functions will be used in the reproduction of every figure in our paper. The simulations folder contains all the codes needed to reproduce the simulations in the main text of the paper. The implementaions of our method and every method considered for comparisons are seperated into their own python or R files. These files  will then be imported via the "vary_cor.R" type of files to make comparisons.
 
 
 
