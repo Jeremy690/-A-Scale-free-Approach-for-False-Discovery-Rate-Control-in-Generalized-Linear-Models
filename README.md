@@ -31,3 +31,8 @@ The code folder contains two sub folders: functions and simulations. The functio
 # Instructions for Use
 You can directly run the "vary_cor.R" type of files once you have imported all the necessary packages. For the high dimensional case, (i.e. figure 5 and figure 6), the Knockoff method is implemented in the "vary_cor.python" type of files.
 
+## Feedback
+
+If you run into any issues or would like to provide feedback, please feel free to send an email to blin@g.harvard.edu to reach us. Thank you! 
+
+
