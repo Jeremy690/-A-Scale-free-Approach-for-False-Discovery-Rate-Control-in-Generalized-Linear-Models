@@ -1,8 +1,4 @@
-f = function(x){
-  ## utlis function
-  exp(x)
-}
-
+### Calculate the precision matrix
 get_M = function(data){
   ## data: design matrix
   n = dim(data)[1]
@@ -29,11 +25,9 @@ get_M = function(data){
   M
 }
 
-DS = function(x, y, q, signal_index){
+DS = function(x, y){
   ## x: design matrix
   ## y: response variable
-  ## q: designated fdr level
-  ## signal_index: true signal index
   n = dim(x)[1]; p = dim(x)[2]
   ## split the data into two halves and run Lasso
   sample_index1 <- sample(x = c(1:n), size = 0.5 * n, replace = F)
@@ -77,12 +71,10 @@ DS = function(x, y, q, signal_index){
   result
 }
 
-MDS = function(x, y, num_split, q, signal_index){
+MDS = function(x, y, num_split){
   ## x: design matrix
   ## y: response variable
   ## num_split: The number of split
-  ## q: designated fdr level
-  ## signal_index: true signal index
   n = dim(x)[1]; p = dim(x)[2]
   inclusion_rate_multiple <- matrix(0, nrow = num_split, ncol = p)
   fdr_multiple <- rep(0, num_split)

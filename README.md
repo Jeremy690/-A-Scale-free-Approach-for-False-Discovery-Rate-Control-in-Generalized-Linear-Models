@@ -24,12 +24,15 @@ The code to implement our method is summarized [here](https://github.com/Jeremy6
 
 **Description**
 
-The code folder contains two sub folders: functions and simulations. The functions folder contains utils.R, in which there are some common utility functions used to make selections and calculate the fdp and the power. These utility functions will be used in the reproduction of every figure in our paper. The simulations folder contains all the codes needed to reproduce the simulations in the main text of the paper. The implementaions of our method and every method considered for comparisons are seperated into their own python or R files. These files  will then be imported via the "vary_cor.R" type of files to make comparisons.
+The code folder contains two sub folders: functions and simulations. The functions folder contains utils.R, in which there are some common utility functions used to make selections and calculate the fdp and the power. These utility functions will be used in the reproduction of every figure in our paper. The simulations folder contains all the codes needed to reproduce the simulations in the main text of the paper. The implementations of our method and every method considered for comparisons are separated into their own python or R files. The utils.R function is the same as that in the functions folder and is contained for the sake of completeness. These files will then be imported via the "vary_cor.R" type of files to make comparisons.
 
 
 
 # Instructions for Use
-You can directly run the "vary_cor.R" type of files once you have imported all the necessary packages. For the high dimensional case, (i.e. figure 5 and figure 6), the Knockoff method is implemented in the "vary_cor.python" type of files.
+After open the ``vary_cor.R'' type of files in each subfolder, set the replicate index to your chosen one and make sure to set the value of the changing variables, e.g. correlation variable rho in ``vary_cor.R''.
+ For the moderate dimensional case, (i.e. figure2, figure3 and figure4), the Knockoff method is implemented in the "vary_cor.py" type of files, make sure do the same things there. 
+ 
+ After the code being run, the final results are summarized in data_save variable and then you can access the result.
 
 # Feedback
 
