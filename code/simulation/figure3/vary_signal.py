@@ -12,10 +12,12 @@ import statsmodels.api as sm
 
 n = 3000 # number of data points
 p = 500  # number of features
-replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
-random.seed(replicate)
-rho = float(os.getenv("att"))
-delta = 11
+### Change the replicate index
+#replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
+#random.seed(replicate)
+rho = 0.2
+### Change the signal strength
+#delta = float(os.getenv("att"))
 p1 = 50
 q = 0.1
 
@@ -68,10 +70,7 @@ knockoff_time = end-start
 
 
 data_save = [fdp, power, knockoff_time]
-filename = '/result_left/cor_%.2f_replicate_%d.txt'%(rho,replicate)
-with open(filename, 'w') as filehandle:
-    for listitem in data_save:
-        filehandle.write('%s\n' % listitem)
+
 
 
 

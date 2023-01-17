@@ -4,32 +4,27 @@ library(mvnfast)
 library(knockoff)
 library(glmhd)
 
-### Set working directory to 'figure2' folder, e.g., 
-# setwd("~/code/simulation/figure2")
+### Set working directory to 'figure4' folder, e.g., 
+# setwd("~/code/simulation/figure4")
 
 ### source code
-source('fdp_power.R')
-source('analys.R')
+source('utils.R')
 source('DS.R')
 source('MDS.R')
 source('BHq.R')
 source('GM.R')
-source('ABHq.R')
 
 ### replicate index
-replicate <- as.integer(Sys.getenv('SLURM_ARRAY_TASK_ID'))
-set.seed(replicate)
+#replicate <- as.integer(Sys.getenv('SLURM_ARRAY_TASK_ID'))
+#set.seed(replicate)
 
-f <- function(x){
-  exp(x)/(1 + exp(x))
-}
-
-p = 60
-n = 500
-s = 30
+p = 500
+n = 3000
+s = 50
 q = 0.1
-rho = 0.2
-signal_strength = as.numeric(Sys.getenv("att"))
+### Change the correlation
+#rho = as.numeric(Sys.getenv("att"))
+signal_strength = 6
 Sigma = matrix(0, nrow = p, ncol = p)
 for(i in 1:p){
   for(j in 1:p){
@@ -41,7 +36,9 @@ signal_index = sample(1:p, size = s, replace = F)
 beta = numeric(p)
 beta[signal_index] = sample(c(-1, 1), s, replace = T)*signal_strength
 mu = X %*% beta
-y = rbinom(n, size = 1, prob = f(mu)) 
+mu = exp(mu)
+y = rnbinom(n, mu = mu, size = 2)
+
 
 DS_time = system.time(DS_result <- DS(X, y))[3]
 DS_result <- fdp_power(DS_result$select_index)
@@ -63,20 +60,11 @@ GM_result <- fdp_power(GM_result$select_index)
 GM_fdp <- GM_result$fdp
 GM_power <- GM_result$power
 
-ABHq_time = system.time(ABHq_result <- ABHq(X, y))[3]
-ABHq_result <- fdp_power(ABHq_result$select_index)
-ABHq_fdp <- ABHq_result$fdp
-ABHq_power <- ABHq_result$power
-
 ### save data
-data_save <- list(DS_fdp   = DS_fdp,   DS_power = DS_power, DS_time = DS_time,
-                  MDS_fdp  = MDS_fdp,  MDS_power = MDS_power, MDS_time = MDS_time,
-                  BHq_fdp  = BHq_fdp,  BHq_power = BHq_power, BHq_time = BHq_time,
-                  GM_fdp   = GM_fdp,   GM_power = GM_power, GM_time = GM_time,
-                  ABHq_fdp = ABHq_fdp, ABHq_power = ABHq_power, ABHq_time = ABHq_time)
-
-save(data_save, file = paste("result_right/signal_", signal_strength, "_replicate_", replicate, ".RData", sep = ""))
-
+data_save <- list(DS_fdp  = DS_fdp,  DS_power  = DS_power, DS_time = DS_time,
+                  MDS_fdp = MDS_fdp, MDS_power = MDS_power, MDS_time = MDS_time,
+                  BHq_fdp = BHq_fdp, BHq_power = BHq_power, BHq_time = BHq_time,
+                  GM_fdp  = GM_fdp,  GM_power  = GM_power, GM_time = GM_time)
 
 
 

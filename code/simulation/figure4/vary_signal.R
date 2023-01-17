@@ -8,23 +8,24 @@ library(glmhd)
 # setwd("~/code/simulation/figure4")
 
 ### source code
-source('fdp_power.R')
-source('analys.R')
+source('utils.R')
 source('DS.R')
 source('MDS.R')
 source('BHq.R')
 source('GM.R')
 
 ### replicate index
-replicate <- as.integer(Sys.getenv('SLURM_ARRAY_TASK_ID'))
-set.seed(replicate)
+#replicate <- as.integer(Sys.getenv('SLURM_ARRAY_TASK_ID'))
+#set.seed(replicate)
+
 
 p = 500
 n = 3000
 s = 50
 q = 0.1
-rho = as.numeric(Sys.getenv("att"))
-signal_strength = 6
+rho = 0.3
+### Change the signal strength
+#signal_strength = as.numeric(Sys.getenv("att"))
 Sigma = matrix(0, nrow = p, ncol = p)
 for(i in 1:p){
   for(j in 1:p){
@@ -37,8 +38,7 @@ beta = numeric(p)
 beta[signal_index] = sample(c(-1, 1), s, replace = T)*signal_strength
 mu = X %*% beta
 mu = exp(mu)
-y = rnbinom(n, mu = mu, size = 2)
-
+y = rnbinom(n, mu = mu, size = 2) 
 
 DS_time = system.time(DS_result <- DS(X, y))[3]
 DS_result <- fdp_power(DS_result$select_index)
@@ -66,7 +66,6 @@ data_save <- list(DS_fdp  = DS_fdp,  DS_power  = DS_power, DS_time = DS_time,
                   BHq_fdp = BHq_fdp, BHq_power = BHq_power, BHq_time = BHq_time,
                   GM_fdp  = GM_fdp,  GM_power  = GM_power, GM_time = GM_time)
 
-save(data_save, file = paste("result_left/cor_", rho, "_replicate_", replicate, ".RData", sep = ""))
 
 
 

@@ -12,10 +12,12 @@ import statsmodels.api as sm
 
 n = 3000 # number of data points
 p = 500  # number of features
-replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
-random.seed(replicate)
-rho = 0.2
-delta = float(os.getenv("att"))
+### Set the replicate index
+#replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
+#random.seed(replicate)
+### Change the correlation
+#rho = float(os.getenv("att"))
+delta = 6
 p1 = 50
 q = 0.1
 
@@ -37,8 +39,8 @@ for nzr in nonzero:
 X = np.random.multivariate_normal(mean=np.zeros(p), cov= Sigma, size=(n,))*1/np.sqrt(n)
 mu = np.dot(X, beta)
 def f(x):
-    return np.exp(x)/(1+np.exp(x))
-y = np.random.binomial(1, f(mu))
+    return np.exp(x)
+y = np.random.negative_binomial(2, 2/(2+f(mu)))
 
 
 start = time.clock()
@@ -46,9 +48,9 @@ kfilter = KnockoffFilter(ksampler='gaussian', knockoff_kwargs={'method':'mvr'})
 _ = kfilter.forward(X=X, y=y, fdr=q)
 Xk = kfilter.Xk
 # Fit MLE with X and Xk
-binomial_model = sm.GLM(y, np.hstack((X, Xk)), family=sm.families.Binomial())
-binomial_results = binomial_model.fit()
-Z = binomial_results.params
+nb_model = sm.GLM(y, np.hstack((X, Xk)), family=sm.families.NegativeBinomial(alpha = 1/2))
+nb_results = nb_model.fit()
+Z = nb_results.params
 tau = 1/np.sqrt(np.diag(np.linalg.inv(np.matmul(np.hstack((X, Xk)).T, np.hstack((X, Xk))))))
 # Get feature importance
 W = abs(Z[:p]*tau[:p]) - abs(Z[p:]*tau[p:])
@@ -68,10 +70,7 @@ knockoff_time = end-start
 
 
 data_save = [fdp, power, knockoff_time]
-filename = '/result_right/signal_%.2f_replicate_%d.txt'%(delta,replicate)
-with open(filename, 'w') as filehandle:
-    for listitem in data_save:
-        filehandle.write('%s\n' % listitem)
+
 
 
 

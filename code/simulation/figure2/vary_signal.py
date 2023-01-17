@@ -7,16 +7,18 @@ import scipy
 import os
 import statsmodels.api as sm
 
-### Set working directory to 'figure3' folder, e.g., 
-# os.chdir("~/code/simulation/figure3")
+### Set working directory to 'figure2' folder, e.g., 
+# os.chdir("~/code/simulation/figure2")
 
-n = 3000 # number of data points
-p = 500  # number of features
-replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
-random.seed(replicate)
-rho = 0.3
-delta = float(os.getenv("att"))
-p1 = 50
+n = 500 # number of data points
+p = 60  # number of features
+### Set the replicate index
+#replicate = int(os.getenv('SLURM_ARRAY_TASK_ID'))
+#random.seed(replicate)
+rho = 0.2
+### Change the signal strength
+#delta = float(os.getenv("att"))
+p1 = 30
 q = 0.1
 
 
@@ -37,8 +39,8 @@ for nzr in nonzero:
 X = np.random.multivariate_normal(mean=np.zeros(p), cov= Sigma, size=(n,))*1/np.sqrt(n)
 mu = np.dot(X, beta)
 def f(x):
-    return np.exp(x)
-y = np.random.negative_binomial(2, 2/(2+f(mu)))
+    return np.exp(x)/(1+np.exp(x))
+y = np.random.binomial(1, f(mu))
 
 
 start = time.clock()
@@ -46,9 +48,9 @@ kfilter = KnockoffFilter(ksampler='gaussian', knockoff_kwargs={'method':'mvr'})
 _ = kfilter.forward(X=X, y=y, fdr=q)
 Xk = kfilter.Xk
 # Fit MLE with X and Xk
-nb_model = sm.GLM(y, np.hstack((X, Xk)), family=sm.families.NegativeBinomial(alpha = 1/2))
-nb_results = nb_model.fit()
-Z = nb_results.params
+binomial_model = sm.GLM(y, np.hstack((X, Xk)), family=sm.families.Binomial())
+binomial_results = binomial_model.fit()
+Z = binomial_results.params
 tau = 1/np.sqrt(np.diag(np.linalg.inv(np.matmul(np.hstack((X, Xk)).T, np.hstack((X, Xk))))))
 # Get feature importance
 W = abs(Z[:p]*tau[:p]) - abs(Z[p:]*tau[p:])

@@ -4,12 +4,11 @@ library(mvnfast)
 library(knockoff)
 library(glmhd)
 
-### Set working directory to 'figure2' folder, e.g., 
-# setwd("~/code/simulation/figure2")
+### Set working directory to 'figure3' folder, e.g., 
+# setwd("~/code/simulation/figure3")
 
 ### source code
-source('fdp_power.R')
-source('analys.R')
+source('utils.R')
 source('DS.R')
 source('MDS.R')
 source('BHq.R')
@@ -17,19 +16,20 @@ source('GM.R')
 source('ABHq.R')
 
 ### replicate index
-replicate <- as.integer(Sys.getenv('SLURM_ARRAY_TASK_ID'))
-set.seed(replicate)
+#replicate <- as.integer(Sys.getenv('SLURM_ARRAY_TASK_ID'))
+#set.seed(replicate)
 
 f <- function(x){
   exp(x)/(1 + exp(x))
 }
 
-p = 60
-n = 500
-s = 30
+p = 500
+n = 3000
+s = 50
 q = 0.1
-rho = as.numeric(Sys.getenv("att"))
-signal_strength = 6.5
+rho = 0.2
+### Change the signal strength
+#signal_strength = as.numeric(Sys.getenv("att"))
 Sigma = matrix(0, nrow = p, ncol = p)
 for(i in 1:p){
   for(j in 1:p){
@@ -74,22 +74,4 @@ data_save <- list(DS_fdp   = DS_fdp,   DS_power = DS_power, DS_time = DS_time,
                   BHq_fdp  = BHq_fdp,  BHq_power = BHq_power, BHq_time = BHq_time,
                   GM_fdp   = GM_fdp,   GM_power = GM_power, GM_time = GM_time,
                   ABHq_fdp = ABHq_fdp, ABHq_power = ABHq_power, ABHq_time = ABHq_time)
-
-save(data_save, file = paste("result_left/cor_", rho, "_replicate_", replicate, ".RData", sep = ""))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
